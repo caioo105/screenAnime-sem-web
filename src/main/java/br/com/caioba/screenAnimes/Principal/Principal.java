@@ -1,13 +1,16 @@
 package br.com.caioba.screenAnimes.Principal;
 
 import br.com.caioba.screenAnimes.model.DadosAnimes;
+import br.com.caioba.screenAnimes.model.DadosEpisodios;
 import br.com.caioba.screenAnimes.model.DadosTemporada;
 import br.com.caioba.screenAnimes.service.ConsumoApi;
 import br.com.caioba.screenAnimes.service.ConverteDados;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class Principal {
 
@@ -39,5 +42,13 @@ public class Principal {
         temporadas.forEach(System.out::println);
 
         temporadas.forEach(t -> t.episodios().forEach(e -> System.out.println(e.titulo())));
+
+        List<DadosEpisodios> dadosEpisodios = temporadas.stream().flatMap(t -> t.episodios().stream()).collect(Collectors.toList());
+
+        System.out.println("\nTOP 5 EPISODIOS");
+        dadosEpisodios.stream().filter(e -> !e.avaliacao().equalsIgnoreCase("N/A"))
+                .sorted(Comparator.comparing(DadosEpisodios::avaliacao).reversed())
+                .limit(5)
+                .forEach(System.out::println);
     }
 }
