@@ -1,6 +1,7 @@
 package br.com.caioba.screenAnimes.model;
 
-import java.util.Optional;
+import br.com.caioba.screenAnimes.service.traducao.ConsultaMyMemory;
+
 import java.util.OptionalDouble;
 
 public class Anime {
@@ -15,9 +16,9 @@ public class Anime {
         this.titulo = dadosAnimes.titulo();
         this.totalTemporadas = dadosAnimes.totalTemporadas();
         this.avaliacao = OptionalDouble.of(Double.valueOf(dadosAnimes.avaliacao())).orElse(0);
-        this.genero = Categoria.fromString(dadosAnimes.genero().split(",")[0].trim());
+        this.genero = Categoria.fromString(dadosAnimes.genero().split(",")[1].trim());
         this.poster = dadosAnimes.poster();
-        this.sinopse = dadosAnimes.sinopse();;
+        this.sinopse = ConsultaMyMemory.obterTraducao(dadosAnimes.sinopse()).trim();
     }
 
     public String getTitulo() {

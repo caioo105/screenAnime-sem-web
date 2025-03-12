@@ -3,7 +3,6 @@ package br.com.caioba.screenAnimes.model;
 public enum Categoria {
     ACAO("Action"),
     AVENTURA("Adventure"),
-    ANIME("Animation"),
     DRAMA("Drama"),
     COMEDIA("Comedy"),
     FANTASIA("Fantasy");
