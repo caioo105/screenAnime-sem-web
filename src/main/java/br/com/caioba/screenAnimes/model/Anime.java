@@ -1,16 +1,35 @@
 package br.com.caioba.screenAnimes.model;
 
 import br.com.caioba.screenAnimes.service.traducao.ConsultaMyMemory;
+import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.OptionalDouble;
 
+@Entity
+@Table(name = "Animes")
 public class Anime {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(unique = true)
     private String titulo;
+
     private Integer totalTemporadas;
+
     private Double avaliacao;
+
+    @Enumerated(EnumType.STRING)
     private Categoria genero;
+
     private String poster;
+
     private String sinopse;
+
+    @Transient
+    private List<Episodios> episodios = new ArrayList<>();
 
     public Anime(DadosAnimes dadosAnimes){
         this.titulo = dadosAnimes.titulo();
@@ -19,6 +38,22 @@ public class Anime {
         this.genero = Categoria.fromString(dadosAnimes.genero().split(",")[1].trim());
         this.poster = dadosAnimes.poster();
         this.sinopse = ConsultaMyMemory.obterTraducao(dadosAnimes.sinopse()).trim();
+    }
+
+    public List<Episodios> getEpisodios() {
+        return episodios;
+    }
+
+    public void setEpisodios(List<Episodios> episodios) {
+        this.episodios = episodios;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTitulo() {

@@ -3,6 +3,7 @@ package br.com.caioba.screenAnimes.Principal;
 import br.com.caioba.screenAnimes.model.Anime;
 import br.com.caioba.screenAnimes.model.DadosAnimes;
 import br.com.caioba.screenAnimes.model.DadosTemporada;
+import br.com.caioba.screenAnimes.repository.Animerepository;
 import br.com.caioba.screenAnimes.service.ConsumoApi;
 import br.com.caioba.screenAnimes.service.ConverteDados;
 import java.util.*;
@@ -22,6 +23,12 @@ public class Principal {
     private final String API_KEY = "&apikey=6585022c";
 
     private List<DadosAnimes> dadosAnimes = new ArrayList<>();
+
+    private Animerepository repositorio;
+
+    public Principal(Animerepository repositorio){
+        this.repositorio = repositorio;
+    }
 
     public void exibirMenu() {
         var opcao = -1;
@@ -60,7 +67,9 @@ public class Principal {
 
         private void buscarAnimeWeb() {
             DadosAnimes dados = getDadosAnime();
-            dadosAnimes.add(dados);
+            Anime anime = new Anime(dados);
+            //dadosAnimes.add(dados);
+            repositorio.save(anime);
             System.out.println(dados);
         }
 
