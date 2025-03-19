@@ -9,7 +9,11 @@ import java.util.OptionalDouble;
 
 @Entity
 @Table(name = "Animes")
+
 public class Anime {
+
+    public Anime (){}
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

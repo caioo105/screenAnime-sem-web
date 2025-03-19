@@ -95,10 +95,7 @@ public class Principal {
     }
 
     private void listarAnimeBuscado(){
-        List<Anime> animes = new ArrayList<>();
-        animes = dadosAnimes.stream()
-                        .map(d -> new Anime(d))
-                                .collect(Collectors.toList());
+        List<Anime> animes = repositorio.findAll();
         animes.stream()
                 .sorted(Comparator.comparing(Anime::getGenero))
                 .forEach(System.out::println);
