@@ -3,12 +3,12 @@ package br.com.caioba.screenAnimes.Principal;
 import br.com.caioba.screenAnimes.model.Anime;
 import br.com.caioba.screenAnimes.model.DadosAnimes;
 import br.com.caioba.screenAnimes.model.DadosTemporada;
+import br.com.caioba.screenAnimes.model.Episodios;
 import br.com.caioba.screenAnimes.repository.Animerepository;
 import br.com.caioba.screenAnimes.service.ConsumoApi;
 import br.com.caioba.screenAnimes.service.ConverteDados;
 import java.util.*;
 import java.util.stream.Collectors;
-
 
 public class Principal {
 
@@ -25,6 +25,8 @@ public class Principal {
     private List<DadosAnimes> dadosAnimes = new ArrayList<>();
 
     private Animerepository repositorio;
+
+    private List<Anime> animes = new ArrayList<>();
 
     public Principal(Animerepository repositorio){
         this.repositorio = repositorio;
@@ -73,29 +75,51 @@ public class Principal {
             System.out.println(dados);
         }
 
-        private DadosAnimes getDadosAnime() {
-            System.out.println("Digite o nome do Anime para busca");
-            var nomeAnime = leitura.nextLine();
-            var json = consumo.obterDados(ENDERECO + nomeAnime.replace(" ", "+") + API_KEY);
-            DadosAnimes dados = converte.obterDados(json, DadosAnimes.class);
-            return dados;
+        private DadosAnimes getDadosAnime(){
+        System.out.println("Digite o nome do Anime para busca");
+        var nomeAnime = leitura.nextLine();
+        var json = consumo.obterDados(ENDERECO + nomeAnime.replace(" ", "+") + API_KEY);
+        DadosAnimes dados = converte.obterDados(json, DadosAnimes.class);
+        return dados;
         }
 
         private void buscarEpisodioPorAnime(){
-            DadosAnimes dadosAnime = getDadosAnime();
-            List<DadosTemporada> temporadas = new ArrayList<>();
+        listarAnimeBuscado();
+        System.out.println("Digite o nome do Anime: ");
+        var nomeAnime = leitura.nextLine();
 
-            for (int i = 1; i <= dadosAnime.totalTemporadas(); i++) {
-                var json = consumo.obterDados(ENDERECO + dadosAnime.titulo().replace(" ", "+") + "&season=" + i + API_KEY);
-                DadosTemporada dadosTemporada = converte.obterDados(json, DadosTemporada.class);
-                temporadas.add(dadosTemporada);
+            Optional<Anime> anime = animes.stream()
+                    .filter(a -> a.getTitulo().toLowerCase().contains(nomeAnime.toLowerCase()))
+                    .findFirst();
+
+            if(anime.isPresent()) {
+                var animeEncontrado = anime.get();
+
+                List<DadosTemporada> temporadas = new ArrayList<>();
+
+                for (int i = 1; i <= animeEncontrado.getTotalTemporadas(); i++) {
+                    var json = consumo.obterDados(ENDERECO + animeEncontrado.getTitulo().replace(" ", "+") + "&season=" + i + API_KEY);
+                    DadosTemporada dadosTemporada = converte.obterDados(json, DadosTemporada.class);
+                    temporadas.add(dadosTemporada);
+                }
+                temporadas.forEach(System.out::println);
+
+                List<Episodios> episodios = temporadas.stream()
+                        .flatMap(d -> d.episodios().stream()
+                                .map(e -> new Episodios(d.numeroTemp(), e)))
+                        .collect(Collectors.toList());
+
+                animeEncontrado.setEpisodios(episodios);
+                repositorio.save(animeEncontrado);
+
+            }else{
+                System.out.println("Anime nao encontrado!");
             }
-            temporadas.forEach(System.out::println);
 
     }
 
     private void listarAnimeBuscado(){
-        List<Anime> animes = repositorio.findAll();
+        animes = repositorio.findAll();
         animes.stream()
                 .sorted(Comparator.comparing(Anime::getGenero))
                 .forEach(System.out::println);

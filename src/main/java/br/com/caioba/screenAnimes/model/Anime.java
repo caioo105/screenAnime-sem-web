@@ -32,7 +32,7 @@ public class Anime {
 
     private String sinopse;
 
-    @Transient
+    @OneToMany(mappedBy = "anime", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Episodios> episodios = new ArrayList<>();
 
     public Anime(DadosAnimes dadosAnimes){
@@ -49,6 +49,7 @@ public class Anime {
     }
 
     public void setEpisodios(List<Episodios> episodios) {
+        episodios.forEach(e -> e.setAnime(this));
         this.episodios = episodios;
     }
 
@@ -115,7 +116,8 @@ public class Anime {
                 " totalTemporadas: " + totalTemporadas +
                 " avaliacao: " + avaliacao +
                 " poster: " + poster + '\''+
-                " sinopse: " + sinopse + '\'';
+                " sinopse: " + sinopse + '\'' +
+                " episodios: " + episodios + '\'';
     }
 }
 

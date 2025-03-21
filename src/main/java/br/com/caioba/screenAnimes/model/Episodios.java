@@ -1,15 +1,34 @@
 package br.com.caioba.screenAnimes.model;
 
+import jakarta.persistence.*;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
+@Entity
+@Table(name = "episodios")
 public class Episodios {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private Integer temporada;
+
     private String titulo;
+
     private Integer numEpi;
+
     private Double avaliacao;
+
     private String duracao;
+
     private LocalDate dataLancamento;
+
+    @ManyToOne
+    private Anime anime;
+
+    public Episodios(){}
 
     public Episodios(Integer numeroTemporada, DadosEpisodios dadosEpisodios) {
         this.temporada = numeroTemporada;
@@ -74,6 +93,22 @@ public class Episodios {
 
     public void setDataLancamento(LocalDate dataLancamento) {
         this.dataLancamento = dataLancamento;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Anime getAnime() {
+        return anime;
+    }
+
+    public void setAnime(Anime anime) {
+        this.anime = anime;
     }
 
     @Override
