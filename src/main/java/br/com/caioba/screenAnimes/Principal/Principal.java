@@ -39,6 +39,8 @@ public class Principal {
                     1 - Buscar Animes
                     2 - Buscar episódios
                     3 - Listar Animes buscados
+                    4-  Buscar Animes por titulo
+                    5-  Top 5 Animes
                     
                     
                     0 - Sair                                 
@@ -57,7 +59,11 @@ public class Principal {
                     break;
                 case 3:
                     listarAnimeBuscado();
+                case 4:
+                    buscarAnimePorTitulo();
                     break;
+                case 5:
+                    top5Animes();
                 case 0:
                     System.out.println("Saindo...");
                     break;
@@ -67,7 +73,10 @@ public class Principal {
           }
         }
 
-        private void buscarAnimeWeb() {
+
+
+
+    private void buscarAnimeWeb() {
             DadosAnimes dados = getDadosAnime();
             Anime anime = new Anime(dados);
             //dadosAnimes.add(dados);
@@ -88,9 +97,7 @@ public class Principal {
         System.out.println("Digite o nome do Anime: ");
         var nomeAnime = leitura.nextLine();
 
-            Optional<Anime> anime = animes.stream()
-                    .filter(a -> a.getTitulo().toLowerCase().contains(nomeAnime.toLowerCase()))
-                    .findFirst();
+            Optional<Anime> anime = repositorio.findByTituloContainingIgnoreCase(nomeAnime);
 
             if(anime.isPresent()) {
                 var animeEncontrado = anime.get();
@@ -123,5 +130,22 @@ public class Principal {
         animes.stream()
                 .sorted(Comparator.comparing(Anime::getGenero))
                 .forEach(System.out::println);
+    }
+
+    private void buscarAnimePorTitulo() {
+        System.out.println("Digite o nome do Anime: ");
+        var nomeAnime = leitura.nextLine();
+        Optional<Anime> animeBuscado = repositorio.findByTituloContainingIgnoreCase(nomeAnime);
+
+        if(animeBuscado.isPresent()){
+            System.out.println("Dados do Anime: " + animeBuscado.get());
+        }else {
+            System.out.println("Anime nao encontrado!");
+        }
+    }
+
+    private void top5Animes() {
+        List<Anime> topAnimes = repositorio.findTop5ByOrderByAvaliacaoDesc();
+        topAnimes.forEach(a -> System.out.println(a.getTitulo() + " avaliacao: " + a.getAvaliacao()));
     }
 }
