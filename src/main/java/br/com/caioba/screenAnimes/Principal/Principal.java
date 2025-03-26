@@ -1,9 +1,6 @@
 package br.com.caioba.screenAnimes.Principal;
 
-import br.com.caioba.screenAnimes.model.Anime;
-import br.com.caioba.screenAnimes.model.DadosAnimes;
-import br.com.caioba.screenAnimes.model.DadosTemporada;
-import br.com.caioba.screenAnimes.model.Episodios;
+import br.com.caioba.screenAnimes.model.*;
 import br.com.caioba.screenAnimes.repository.Animerepository;
 import br.com.caioba.screenAnimes.service.ConsumoApi;
 import br.com.caioba.screenAnimes.service.ConverteDados;
@@ -41,7 +38,8 @@ public class Principal {
                     3 - Listar Animes buscados
                     4-  Buscar Animes por titulo
                     5-  Top 5 Animes
-                    
+                    6- Buscar Animes por genero
+                    7- Buscar Animes por temporada
                     
                     0 - Sair                                 
                     """;
@@ -64,6 +62,12 @@ public class Principal {
                     break;
                 case 5:
                     top5Animes();
+                case 6:
+                    buscarPorCategoria();
+                    break;
+                case 7:
+                    buscarPorTemporadaEavaliacao();
+                    break;
                 case 0:
                     System.out.println("Saindo...");
                     break;
@@ -148,4 +152,22 @@ public class Principal {
         List<Anime> topAnimes = repositorio.findTop5ByOrderByAvaliacaoDesc();
         topAnimes.forEach(a -> System.out.println(a.getTitulo() + " avaliacao: " + a.getAvaliacao()));
     }
+
+    private void buscarPorCategoria() {
+        System.out.println("Digite o genero desejado: ");
+        var nomeGenero = leitura.nextLine();
+        Categoria categoria = Categoria.fromPortugues(nomeGenero);
+        List<Anime> animePorCategoria = repositorio.findByGenero(categoria);
+        System.out.println("Animes com esse genero: " + nomeGenero);
+        animePorCategoria.forEach(System.out::println);
+    }
+    private void buscarPorTemporadaEavaliacao() {
+        System.out.println("Digite o numero de temporadas desejado: ");
+        int temporadas = leitura.nextInt();
+        System.out.println("Agora digite a avaliacao desejada");
+        double avaliacao = leitura.nextDouble();
+        List<Anime> animePorTemporadaEavaliacao = repositorio.findBytotalTemporadasGreaterThanEqualAndAvaliacaoGreaterThanEqual(temporadas, avaliacao);
+        animePorTemporadaEavaliacao.forEach(System.out::println);
+    }
+
 }
