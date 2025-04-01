@@ -40,6 +40,7 @@ public class Principal {
                     5-  Top 5 Animes
                     6- Buscar Animes por genero
                     7- Buscar Animes por temporada
+                    8- Buscar episodios por trechos
                     
                     0 - Sair                                 
                     """;
@@ -67,6 +68,9 @@ public class Principal {
                     break;
                 case 7:
                     buscarPorTemporadaEavaliacao();
+                    break;
+                case 8:
+                    buscarTrechoEpisodio();
                     break;
                 case 0:
                     System.out.println("Saindo...");
@@ -166,8 +170,17 @@ public class Principal {
         int temporadas = leitura.nextInt();
         System.out.println("Agora digite a avaliacao desejada");
         double avaliacao = leitura.nextDouble();
-        List<Anime> animePorTemporadaEavaliacao = repositorio.findBytotalTemporadasGreaterThanEqualAndAvaliacaoGreaterThanEqual(temporadas, avaliacao);
+        List<Anime> animePorTemporadaEavaliacao = repositorio.animePorTemporadaEavaliacao(temporadas, avaliacao);
         animePorTemporadaEavaliacao.forEach(System.out::println);
     }
 
+    private void buscarTrechoEpisodio(){
+        System.out.println("Digite o trecho do episdio: ");
+        var trechoEpisodio = leitura.nextLine();
+        List<Episodios> episodiosEncontrados = repositorio.buscarEpisodioPorTrecho(trechoEpisodio);
+        episodiosEncontrados.forEach(e ->
+                System.out.printf("Anime: %s Temporada %s - Episodio %s - %s\n",
+                        e.getAnime().getTitulo(), e.getTemporada(),
+                        e.getNumEpi(), e.getTitulo()));
+    }
 }
