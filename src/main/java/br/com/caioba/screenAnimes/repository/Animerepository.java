@@ -6,6 +6,7 @@ import br.com.caioba.screenAnimes.model.Episodios;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,4 +24,11 @@ public interface Animerepository extends JpaRepository<Anime, Long> {
 
     @Query("select e from Anime a JOIN a.episodios e WHERE e.titulo ILIKE %:trechoEpisodio%")
     List<Episodios> buscarEpisodioPorTrecho(String trechoEpisodio);
+
+    @Query("select e from Anime a JOIN a.episodios e WHERE a = :anime ORDER BY e.avaliacao DESC LIMIT 5")
+
+    List<Episodios> top5EpisodiosPorAnime(Anime anime);
+
+    @Query("select e from Anime a JOIN a.episodios e WHERE a = :anime AND  YEAR(e.dataLancamento) >= :ano")
+    List<Episodios> episodiosPorData(Anime anime, int ano);
 }

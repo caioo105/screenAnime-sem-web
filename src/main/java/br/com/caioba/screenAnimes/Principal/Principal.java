@@ -25,6 +25,8 @@ public class Principal {
 
     private List<Anime> animes = new ArrayList<>();
 
+    private Optional<Anime> animeBusca;
+
     public Principal(Animerepository repositorio){
         this.repositorio = repositorio;
     }
@@ -38,9 +40,11 @@ public class Principal {
                     3 - Listar Animes buscados
                     4-  Buscar Animes por titulo
                     5-  Top 5 Animes
-                    6- Buscar Animes por genero
-                    7- Buscar Animes por temporada
-                    8- Buscar episodios por trechos
+                    6-  Buscar Animes por genero
+                    7-  Buscar Animes por temporada
+                    8-  Buscar episodios por trechos
+                    9-  Top 5 Episodios do Anime
+                    10- Buscar ano do Anime
                     
                     0 - Sair                                 
                     """;
@@ -71,6 +75,12 @@ public class Principal {
                     break;
                 case 8:
                     buscarTrechoEpisodio();
+                    break;
+                case 9:
+                    top5EpisodiosPorAnime();
+                    break;
+                case 10:
+                    buscarEpisodioAno();
                     break;
                 case 0:
                     System.out.println("Saindo...");
@@ -143,10 +153,10 @@ public class Principal {
     private void buscarAnimePorTitulo() {
         System.out.println("Digite o nome do Anime: ");
         var nomeAnime = leitura.nextLine();
-        Optional<Anime> animeBuscado = repositorio.findByTituloContainingIgnoreCase(nomeAnime);
+        animeBusca = repositorio.findByTituloContainingIgnoreCase(nomeAnime);
 
-        if(animeBuscado.isPresent()){
-            System.out.println("Dados do Anime: " + animeBuscado.get());
+        if(animeBusca.isPresent()){
+            System.out.println("Dados do Anime: " + animeBusca.get());
         }else {
             System.out.println("Anime nao encontrado!");
         }
@@ -183,4 +193,29 @@ public class Principal {
                         e.getAnime().getTitulo(), e.getTemporada(),
                         e.getNumEpi(), e.getTitulo()));
     }
+
+    private void top5EpisodiosPorAnime(){
+        buscarAnimePorTitulo();
+        if(animeBusca.isPresent()){
+            Anime anime = animeBusca.get();
+            List<Episodios> top5Episodios = repositorio.top5EpisodiosPorAnime(anime);
+            top5Episodios.forEach(e ->
+                    System.out.printf("Anime: %s Temporada %s - Episodio %s - %s Avaliacao %s - \n",
+                    e.getAnime().getTitulo(), e.getTemporada(),
+                    e.getNumEpi(), e.getTitulo(), e.getAvaliacao()));
+        }
+    }
+
+    private void buscarEpisodioAno(){
+        buscarAnimePorTitulo();
+        if(animeBusca.isPresent()){
+            Anime anime = animeBusca.get();
+            System.out.println("Digite o ano limite: ");
+            var anoLancamento = leitura.nextInt();
+            leitura.nextLine();
+            List<Episodios> episodiosAno = repositorio.episodiosPorData(anime, anoLancamento);
+            episodiosAno.forEach(System.out::println);
+        }
+    }
+
 }
