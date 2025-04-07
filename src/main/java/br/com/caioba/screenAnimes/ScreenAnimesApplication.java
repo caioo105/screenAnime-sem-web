@@ -16,18 +16,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootApplication
-public class ScreenAnimesApplication implements CommandLineRunner {
-
-	@Autowired
-	private Animerepository repositorio;
+public class ScreenAnimesApplication{
 
 	public static void main(String[] args) {
 		SpringApplication.run(ScreenAnimesApplication.class, args);
 	}
-
-	@Override
-	public void run(String... args) throws Exception {
-		Principal principal = new Principal(repositorio);
-		principal.exibirMenu();
-	}
 }
+
+
