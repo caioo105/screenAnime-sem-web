@@ -1,11 +1,11 @@
 package br.com.caioba.screenAnimes.model;
 
 public enum Categoria {
-    ACAO("Action", "acao"),
-    AVENTURA("Adventure", "aventura"),
-    DRAMA("Drama", "drama"),
-    COMEDIA("Comedy", "comedia"),
-    FANTASIA("Fantasy", "fantasia");
+    ACAO("Action", "Ação"),
+    AVENTURA("Adventure", "Aventura"),
+    DRAMA("Drama", "Drama"),
+    COMEDIA("Comedy", "Comédia"),
+    FANTASIA("Fantasy", "Fantasia");
 
     private String categoriaOmdb;
 

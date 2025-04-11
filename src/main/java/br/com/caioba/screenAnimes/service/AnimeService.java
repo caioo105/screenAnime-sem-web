@@ -1,7 +1,9 @@
 package br.com.caioba.screenAnimes.service;
 
 import br.com.caioba.screenAnimes.dto.AnimeDTO;
+import br.com.caioba.screenAnimes.dto.EpisodioDTO;
 import br.com.caioba.screenAnimes.model.Anime;
+import br.com.caioba.screenAnimes.model.Categoria;
 import br.com.caioba.screenAnimes.repository.Animerepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,5 +43,29 @@ public class AnimeService {
             return new AnimeDTO(a.getId(), a.getTitulo() , a.getTotalTemporadas() , a.getAvaliacao(), a.getGenero() ,a.getPoster(), a.getSinopse());
         }
         return null;
+    }
+
+    public List<EpisodioDTO> obterTodasTemporadas(Long id) {
+        Optional<Anime> anime = repositorio.findById(id);
+
+        if(anime.isPresent()){
+            Anime a = anime.get();
+            return a.getEpisodios().stream()
+                    .map(e -> new EpisodioDTO(e.getTemporada(),e.getNumEpi(), e.getTitulo()))
+                    .collect(Collectors.toList());
+        }
+        return null;
+    }
+
+    public List<EpisodioDTO> obterEpisodiosPorTemporada(Long id, Long numero) {
+        return repositorio.obterEpisodiosPorTemporada(id, numero)
+                .stream()
+                .map(e -> new EpisodioDTO(e.getTemporada(),e.getNumEpi(), e.getTitulo()))
+                .collect(Collectors.toList());
+    }
+
+    public List<AnimeDTO> obterGenero(String genero) {
+        Categoria categoria = Categoria.fromPortugues(genero);
+        return converteDados(repositorio.findByGenero(categoria));
     }
 }

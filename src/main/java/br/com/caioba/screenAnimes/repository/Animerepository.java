@@ -33,4 +33,7 @@ public interface Animerepository extends JpaRepository<Anime, Long> {
     List<Episodios> episodiosPorData(Anime anime, int ano);
 
     List<Anime> findTop5ByOrderByEpisodiosDataLancamentoDesc();
+
+    @Query("SELECT e FROM Anime s JOIN s.episodios e WHERE s.id = :id AND e.temporada = :numero")
+    List<Episodios> obterEpisodiosPorTemporada(Long id, Long numero);
 }
