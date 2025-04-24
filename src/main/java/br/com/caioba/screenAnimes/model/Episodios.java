@@ -12,17 +12,11 @@ public class Episodios {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private Integer temporada;
-
     private String titulo;
-
     private Integer numEpi;
-
     private Double avaliacao;
-
     private String duracao;
-
     private LocalDate dataLancamento;
 
     @ManyToOne
@@ -79,14 +73,6 @@ public class Episodios {
         this.avaliacao = avaliacao;
     }
 
-    public String getDuracao() {
-        return duracao;
-    }
-
-    public void setDuracao(String duracao) {
-        this.duracao = duracao;
-    }
-
     public LocalDate getDataLancamento() {
         return dataLancamento;
     }
@@ -117,7 +103,6 @@ public class Episodios {
                 ", titulo='" + titulo + '\'' +
                 ", numEpi=" + numEpi +
                 ", avaliacao=" + avaliacao +
-                ", duracao='" + duracao + '\'' +
                 ", dataLancamento=" + dataLancamento;
     }
 }
